@@ -3,3 +3,5 @@ function addLength (str) {
 }
 
 console.log(addLength([]))
+
+module.exports = addLength
