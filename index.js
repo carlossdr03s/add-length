@@ -5,10 +5,7 @@ function push (arr, newElement) {
     newArray = [newElement]
   }
 
-  for (let i = 0; i < arr.length; i++) {
-    const element = arr[i]
-    newArray = [element, newElement]
-  }
+  newArray = [...arr, newElement]
 
   return newArray
 }
@@ -26,10 +23,9 @@ function getSpaceIndex (value) {
   return arrayOfIndexes
 }
 
-function loopToSepareteBySpaces (numberToInterateUntilMatchSpaceIndex, value, valueItems) {
-  for (let indexOfString = numberToInterateUntilMatchSpaceIndex === 1
-    ? 0
-    : valueItems.indexOfLastString + 1; indexOfString < value.length; indexOfString++) {
+function loopToSepareteBySpaces (value, valueItems) {
+  const convertedString = valueItems.indexOfLastString === 0 ? 0 : valueItems.indexOfLastString + 1
+  for (let indexOfString = convertedString; indexOfString < value.length; indexOfString++) {
     const stringReceived = value[indexOfString]
 
     if (stringReceived === ' ') {
@@ -42,27 +38,28 @@ function loopToSepareteBySpaces (numberToInterateUntilMatchSpaceIndex, value, va
 
 function addLength (value) {
   const valueSpaceIndex = getSpaceIndex(value)
-  const arrayOfSeparatedWordsWithLength = []
+  let arrayOfSeparatedWordsWithLength = []
   let valueItems = {
-    singleWordFromValue: ''
+    singleWordFromValue: '',
+    indexOfLastString: 0
   }
 
   let numberToInterateUntilMatchSpaceIndex = 0
 
-  while (numberToInterateUntilMatchSpaceIndex < valueSpaceIndex.length + 2) {
+  while (numberToInterateUntilMatchSpaceIndex <= valueSpaceIndex.length + 1) {
     if (valueItems?.singleWordFromValue?.length > 0) {
-      arrayOfSeparatedWordsWithLength.push(`${valueItems.singleWordFromValue} ${valueItems.singleWordFromValue.length}`)
+      arrayOfSeparatedWordsWithLength = push(arrayOfSeparatedWordsWithLength,
+        `${valueItems.singleWordFromValue} ${valueItems.singleWordFromValue.length}`)
 
       valueItems.singleWordFromValue = ''
-
       valueItems = {
         singleWordFromValue: '',
         indexOfLastString: valueSpaceIndex[numberToInterateUntilMatchSpaceIndex - 1]
       }
     }
 
+    loopToSepareteBySpaces(value, valueItems)
     numberToInterateUntilMatchSpaceIndex++
-    loopToSepareteBySpaces(numberToInterateUntilMatchSpaceIndex, value, valueItems)
   }
 
   return arrayOfSeparatedWordsWithLength
