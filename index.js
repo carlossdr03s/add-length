@@ -1,168 +1,73 @@
 function push (arr, newElement) {
-  let newArr
+  let newArray
 
   if (arr.length === 0) {
-    newArr = [newElement]
+    newArray = [newElement]
   }
 
   for (let i = 0; i < arr.length; i++) {
     const element = arr[i]
-    newArr = [element, newElement]
+    newArray = [element, newElement]
   }
 
-  return newArr
+  return newArray
 }
 
 function getSpaceIndex (value) {
-  let indexArr = []
+  let arrayOfIndexes = []
   for (let i = 0; i < value.length; i++) {
-    const element = value[i]
+    const elementFromString = value[i]
 
-    if (element === ' ') {
-      indexArr = push(indexArr, i)
+    if (elementFromString === ' ') {
+      arrayOfIndexes = push(arrayOfIndexes, i)
     }
   }
 
-  return indexArr
+  return arrayOfIndexes
 }
 
-// function separeteByIndex (value) {
-//   const indexOfSpace = getSpaceIndex(value)
-//   let newArr = []
-//   let word = ''
+function loopToSepareteBySpaces (numberToInterateUntilMatchSpaceIndex, value, valueItems) {
+  for (let indexOfString = numberToInterateUntilMatchSpaceIndex === 1
+    ? 0
+    : valueItems.indexOfLastString + 1; indexOfString < value.length; indexOfString++) {
+    const stringReceived = value[indexOfString]
 
-//   for (let indexOfString = 0; indexOfString < value.length; indexOfString++) {
-//     const element = value[indexOfString]
-//     for (let i = 0; i < indexOfSpace.length; i++) {
-//       const index = indexOfSpace[i]
-
-//       if (indexOfString < index) {
-//         word = element
-//         newArr = push(newArr, element)
-//       }
-//     }
-//   }
-
-//   console.log(word);
-//   return newArr
-// }
-
-function removeElementFromString (value, stringToRemove) {
-  // loop to repeat for until all s was cleared
-  //
-  const valueSpaceIndex = getSpaceIndex(value)
-  const mutableString = value
-  const arr = []
-  let newS = ''
-  let newString = {
-    string: newS
-  }
-
-  const contOfImmutableString = getSpaceIndex(value).length + 1
-  const countOfManipulatedString = getSpaceIndex(newS).length + 1
-
-  // console.log({
-  //   valueSpaceIndex: valueSpaceIndex[0]
-  // });
-
-  const isSpaceOfManipulatedValueDifferentFromValue = contOfImmutableString - 1 === countOfManipulatedString
-
-  // console.log({
-  //   isSpaceOfManipulatedValueDifferentFromValue
-  // });
-
-  //  montar palavra, compara com a stringToRemove, é diferente? coloca em newS
-  // buena > jajajaja
-  // quando terminar o loop?
-  // quantidade de espaços > get space by index - 1
-  let n = 0
-
-  // fazer o loop ok, como parar
-  while (n <= valueSpaceIndex.length + 1) {
-    if (newString.string.length > 0) {
-      arr.push(`${newString.string} ${newString.string.length}`)
-      newS = ''
-      newString = {
-        string: '',
-        indexOfLastString: valueSpaceIndex[n] === undefined ? valueSpaceIndex[valueSpaceIndex.length - 1] : valueSpaceIndex[n - 1]
-      }
-    }
-
-    n++
-
-    for (let indexOfString = n === 1 ? 0 : newString.indexOfLastString + 1; indexOfString < value.length; indexOfString++) {
-      const stringReceived = mutableString[indexOfString]
-      if (stringReceived === ' ') {
-        break
-      }
-
-      newS += stringReceived
-
-      newString.string = newS
-
-      // console.log(newS);
-
-      // countOfManipulatedString = getSpaceIndex(newS).length + 1
-
-      // console.log(newS);
-    }
-  }
-
-  // interar dnv, mas o value precisar tirar o valor adicionado a nova variavel
-
-  // console.log(mutableString);
-  console.log({ arr })
-}
-
-removeElementFromString('you will win', 'bot')
-
-/// // chegar naquele index, parar, remover o index q foi adicionado (ou colocar em uma variavel oq foi feito), fazer o loop novamente
-// buena bot > buena > value = bot
-
-function separeteBySpaces (value) {
-  const spaceIndexArr = getSpaceIndex(value)
-  // console.log(spaceIndexArr);
-  let arrOfSeparetedWords = []
-  const manipulatedValue = value
-  let w = ''
-  const wordWithNumber = []
-
-  // voltar pra ca, usando o while para interar dnv, com a funcao removeElementFromString removendo oq foi
-  // colocado em array da string manipulatedValue
-  // while (condition) {
-
-  // }
-
-  for (let indexWord = 0; indexWord < manipulatedValue.length; indexWord++) {
-    const word = manipulatedValue[indexWord]
-
-    w = w + word
-    if (word === ' ') {
+    if (stringReceived === ' ') {
       break
-      // console.log('entrou');
     }
+
+    valueItems.singleWordFromValue = valueItems.singleWordFromValue += stringReceived
+  }
+}
+
+function addLength (value) {
+  const valueSpaceIndex = getSpaceIndex(value)
+  const arrayOfSeparatedWordsWithLength = []
+  let valueItems = {
+    singleWordFromValue: ''
   }
 
-  wordWithNumber.push(arrOfSeparetedWords[arrOfSeparetedWords.length - 1])
-  arrOfSeparetedWords = []
+  let numberToInterateUntilMatchSpaceIndex = 0
 
-  // console.log(wordWithNumber);
+  while (numberToInterateUntilMatchSpaceIndex < valueSpaceIndex.length + 2) {
+    if (valueItems?.singleWordFromValue?.length > 0) {
+      arrayOfSeparatedWordsWithLength.push(`${valueItems.singleWordFromValue} ${valueItems.singleWordFromValue.length}`)
 
-  return wordWithNumber
+      valueItems.singleWordFromValue = ''
+
+      valueItems = {
+        singleWordFromValue: '',
+        indexOfLastString: valueSpaceIndex[numberToInterateUntilMatchSpaceIndex - 1]
+      }
+    }
+
+    numberToInterateUntilMatchSpaceIndex++
+    loopToSepareteBySpaces(numberToInterateUntilMatchSpaceIndex, value, valueItems)
+  }
+
+  return arrayOfSeparatedWordsWithLength
 }
 
-function addLength (str) {
-  const arr = separeteBySpaces(str)
-  // const newArr = push([str], arr)
-
-  // for (let i = 0; i < str.length; i++) {
-  //   const element = str[i]
-
-  // }
-
-  return arr
-}
-
-// console.log(addLength('buena bot jajaja'))
+console.log(addLength('carlinhos the estag'))
 
 module.exports = addLength
